@@ -6,13 +6,12 @@
 /*   By: psaengha <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:31:49 by psaengha          #+#    #+#             */
-/*   Updated: 2023/07/05 18:32:05 by psaengha         ###   ########.fr       */
+/*   Updated: 2023/07/06 01:08:09 by psaengha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <signal.h>
+#include "minitalk.h"
+#include "ft_printf/ft_printf.h"
 
 // recieve PID as av[1] (the system take it as String)
 // use kill to send signal to that PID
@@ -64,21 +63,44 @@ int	ft_atoi(const char *str)
 	return (result * n);
 }
 
-void	handle_sigusr1(void)
+// void	handle_sigusr1(void)
+// {
+// 	printf("Client\n");
+// }
+
+//turn ascii to binary
+void	trans(pid_t pid, char c)
 {
-	printf("Client\n");
+	(void)pid;
+	int bitshift = 0;
+	while (bitshift < 8)
+	{
+		if (c & (0x80 >> bitshift))
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
+		usleep(3); //if dont sleep the signal will be send too simultaneously and collapse with each other
+		bitshift++;
+	}
 }
 
 int	main(int ac, char **av)
 {
-	struct sigaction	sa;
+	// struct sigaction	sa;
+	char				*str;
 	pid_t				pid;
 
-	if (ac < 3)
-		exit(0);
+	// if (ac < 3)
+	// 	exit(0);
+	(void)ac;
 	pid = ft_atoi(av[1]);
-	printf("pid: %d", pid);
-	sa.sa_handler = &handle_sigusr1;
-	sigaction(SIGUSR1, &sa, NULL);
+	str = av[2];
+	// printf("pid: %d\n", pid);
+	// sa.sa_handler = &handle_sigusr1;
+	// sigaction(SIGUSR1, &sa, NULL);
+	// sigaction(SIGUSR2, &sa, NULL);
+	if (pid > 0)
+		while (*str)
+			trans(pid, *str++);
 	return (0);
 }
