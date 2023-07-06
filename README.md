@@ -4,7 +4,8 @@ The server will start first and print out PID, and client will recieve PID and s
 
 ## How to run the code
 ```Makefile
-    make
+make
 
-    ./server
-    ./client SERVER_PID STRING
+./server
+./client SERVER_PID STRING```
+Client can take text file as parameter by using $(cat FILENAME)
