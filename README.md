@@ -5,5 +5,6 @@ The server will start first and print out PID, and client will recieve PID and s
 ## How to run the code
 ```Makefile
     make
+
     ./server
     ./client SERVER_PID STRING
