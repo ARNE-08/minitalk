@@ -11,3 +11,19 @@ make
 ```
 
 Client can take text file as parameter by using $(cat FILENAME)
+
+## Allowed function
+- write
+- ft_printf and any equivalent YOU coded
+- signal
+- sigemptyset
+- sigaddset
+- sigaction
+- kill
+- getpid
+- malloc
+- free
+- pause
+- sleep
+- usleep
+- exit
