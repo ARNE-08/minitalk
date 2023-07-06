@@ -17,6 +17,10 @@ make
 
 Client can take text file as parameter by using $(cat FILENAME)
 
+```
+./client SERVER_PID $(cat FILENAME)
+```
+
 ## Allowed function
 Only use 'SIGUSR1' and 'SIGUSR2' for the signal
 - write
