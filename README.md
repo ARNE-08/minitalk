@@ -8,5 +8,7 @@ make
 
 ./server
 ./client SERVER_PID STRING
+
 ---
+
 Client can take text file as parameter by using $(cat FILENAME)
