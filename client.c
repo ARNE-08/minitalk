@@ -6,15 +6,18 @@
 /*   By: psaengha <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 15:31:49 by psaengha          #+#    #+#             */
-/*   Updated: 2023/07/06 01:08:09 by psaengha         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:48:07 by psaengha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
 #include "ft_printf/ft_printf.h"
 
 // recieve PID as av[1] (the system take it as String)
 // use kill to send signal to that PID
+// trans function is used to convert String into binary and send signal
 
 static int	checkneg(const char *str)
 {
@@ -63,42 +66,40 @@ int	ft_atoi(const char *str)
 	return (result * n);
 }
 
-// void	handle_sigusr1(void)
-// {
-// 	printf("Client\n");
-// }
-
-//turn ascii to binary
 void	trans(pid_t pid, char c)
 {
-	(void)pid;
-	int bitshift = 0;
+	int	bitshift;
+
+	bitshift = 0;
 	while (bitshift < 8)
 	{
 		if (c & (0x80 >> bitshift))
-			kill(pid, SIGUSR1);
+		{
+			if (kill(pid, SIGUSR1) == -1)
+				exit(1);
+		}
 		else
-			kill(pid, SIGUSR2);
-		usleep(3); //if dont sleep the signal will be send too simultaneously and collapse with each other
+		{
+			if (kill(pid, SIGUSR2) == -1)
+				exit(1);
+		}
+		usleep(200);
 		bitshift++;
 	}
 }
 
 int	main(int ac, char **av)
 {
-	// struct sigaction	sa;
-	char				*str;
-	pid_t				pid;
+	char	*str;
+	pid_t	pid;
 
-	// if (ac < 3)
-	// 	exit(0);
-	(void)ac;
+	if (ac != 3)
+	{
+		ft_printf("Invalid argument");
+		exit(0);
+	}
 	pid = ft_atoi(av[1]);
 	str = av[2];
-	// printf("pid: %d\n", pid);
-	// sa.sa_handler = &handle_sigusr1;
-	// sigaction(SIGUSR1, &sa, NULL);
-	// sigaction(SIGUSR2, &sa, NULL);
 	if (pid > 0)
 		while (*str)
 			trans(pid, *str++);
